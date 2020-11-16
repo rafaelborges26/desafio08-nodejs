@@ -18,10 +18,11 @@ class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToMany(type => Customer)
-  @JoinColumn()
+  @ManyToMany(() => Customer)
+  @JoinColumn({ name: 'customer_id'})
   customer: Customer;
 
+  @OneToMany(() => OrdersProducts, order_products => order_products.order) //um pra muitos nessa ponta, um pra muitos na outra forma um MtoM
   order_products: OrdersProducts[];
 
   @CreateDateColumn()
