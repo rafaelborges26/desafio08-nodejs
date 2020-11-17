@@ -17,14 +17,6 @@ export class CreateOrdersProducts1605462559045 implements MigrationInterface {
               default: 'uuid_generate_v4()'
             },
             {
-              name: 'product_id',
-              type: 'uuid',
-            },
-            {
-              name: 'order_id',
-              type: 'uuid'
-            },
-            {
               name: 'price',
               type: 'decimal',
               precision: 7,
@@ -47,24 +39,6 @@ export class CreateOrdersProducts1605462559045 implements MigrationInterface {
                default: 'now()'
              }
           ],
-          foreignKeys: [
-            {
-              name: 'orders_productsProducts',
-              referencedTableName: 'products',
-              referencedColumnNames: ['id'],
-              columnNames: ['product_id'],
-              onDelete: 'CASCADE',
-              onUpdate: 'CASCADE',
-            },
-            {
-              name: 'orders_productsOrders',
-              referencedTableName: 'order',
-              referencedColumnNames: ['id'],
-              columnNames: ['order_id'],
-              onDelete: 'CASCADE',
-              onUpdate: 'CASCADE',
-            }
-          ]
         })
       )
     }

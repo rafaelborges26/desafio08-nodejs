@@ -18,12 +18,14 @@ class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToMany(() => Customer)
+  @ManyToOne(() => Customer) //varios pedidos podem ter um cliente
   @JoinColumn({ name: 'customer_id'})
-  customer: Customer;
+  customer: Customer; //relacionamento
 
-  @OneToMany(() => OrdersProducts, order_products => order_products.order) //um pra muitos nessa ponta, um pra muitos na outra forma um MtoM
-  order_products: OrdersProducts[];
+  @OneToMany(() => OrdersProducts, order_products => order_products.order, {
+    cascade: true
+  }) //um pra muitos nessa ponta, muitos para um na ponta do OrderProduct forma um MtoM
+  order_products: OrdersProducts[]; //relacionamento
 
   @CreateDateColumn()
   created_at: Date;
