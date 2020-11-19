@@ -6,6 +6,7 @@ import IProductsRepository from '@modules/products/repositories/IProductsReposit
 import ICustomersRepository from '@modules/customers/repositories/ICustomersRepository';
 import Order from '../infra/typeorm/entities/Order';
 import IOrdersRepository from '../repositories/IOrdersRepository';
+import Product from '@modules/products/infra/typeorm/entities/Product';
 
 interface IProduct {
   id: string;
@@ -39,11 +40,49 @@ class CreateOrderService {
       throw new AppError('Could not fiund any products')
     }
 
-    //const order = this.ordersRepository.create({
-    //  customer_id,
-    //  products:
-    //})
+    const existentProductsIds = existentProducts.map(products => products.id) //[1, 2, 3..]
 
+    const checkInexistentProductIds = products.filter(
+      product => !existentProductsIds.includes(product.id) //verifica se os ids que buscamos estao todos entre os ids existentes
+    )
+
+    if (checkInexistentProductIds.length) {
+      throw new AppError(`could not find product: ${checkInexistentProductIds[0].id}`)
+    }
+
+    const findProductsWithoutQuantity = products.filter(
+      product =>
+      existentProducts.filter(p => p.id === product.id).map(productQuantity => productQuantity.quantity < product.quantity) //se a quantidade que pedimos esse produto for menor do q a quantidade q temos da erro
+    )//retorna os produtos invalidos
+
+    if(findProductsWithoutQuantity.length) {
+      throw new AppError(`the quantity: ${findProductsWithoutQuantity[0].quantity} is not available for ${findProductsWithoutQuantity}`)
+    }
+
+    const serializedProducts = products.map(product => ({
+      product_id: product.id,
+      quantity: product.quantity,
+      price: existentProducts.filter(p => p.id === product.id)[0].price
+    }))
+
+    const order = await this.ordersRepository.create({
+      customer: customerExists,
+      products: serializedProducts
+    })
+
+
+    //diminuir a quantidade de produtos em estoque
+    const { order_products } = order
+
+    const orderedProductsQuantity = order_products.map(product => ({
+      id: product.product.id,
+      quantity: existentProducts.filter(p => p.id === product.product_id)[0].quantity - product.quantity
+    }))
+
+    await this.productsRepository.updateQuantity(orderedProductsQuantity)
+
+
+    return order
 
   }
 }
