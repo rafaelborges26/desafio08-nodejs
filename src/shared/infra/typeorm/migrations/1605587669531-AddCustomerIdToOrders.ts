@@ -3,7 +3,7 @@ import {MigrationInterface, QueryRunner, TableColumn, TableForeignKey} from "typ
 export class AddCustomerIdToOrders1605587669531 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
-      await queryRunner.addColumn('order',
+      await queryRunner.addColumn('orders',
       new TableColumn({
         name: 'customer_id',
         type: 'uuid',
@@ -12,7 +12,7 @@ export class AddCustomerIdToOrders1605587669531 implements MigrationInterface {
       )
 
 
-      await queryRunner.createForeignKey('order', new TableForeignKey({
+      await queryRunner.createForeignKey('orders', new TableForeignKey({
         name: 'OrderCustomer', //name da FK
         columnNames: ['customer_id'], //campo nessa tabela
         referencedColumnNames: ['id'], //campo da outra tabela
@@ -24,9 +24,9 @@ export class AddCustomerIdToOrders1605587669531 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
-      await queryRunner.dropForeignKey('order', 'OrderCustomer')
+      await queryRunner.dropForeignKey('orders', 'OrderCustomer')
 
-      await queryRunner.dropColumn('order', 'customer_id')
+      await queryRunner.dropColumn('orders', 'customer_id')
     }
 
 }

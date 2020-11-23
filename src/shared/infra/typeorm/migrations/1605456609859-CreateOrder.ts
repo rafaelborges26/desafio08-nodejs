@@ -6,7 +6,7 @@ export class CreateOrder1605456609859 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<any> {
       queryRunner.createTable(
         new Table({
-          name: 'order',
+          name: 'orders',
           columns: [
             {
               name: 'id',
@@ -33,7 +33,7 @@ export class CreateOrder1605456609859 implements MigrationInterface {
 
     public async down(queryRunner: QueryRunner): Promise<any> {
 
-      await queryRunner.dropTable('order')
+      await queryRunner.dropTable('orders')
     }
 
 }

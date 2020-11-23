@@ -16,7 +16,7 @@ export class AddOrderIdToOrdersProducts1605588119129 implements MigrationInterfa
         'orders_products',
       new TableForeignKey({
       name: 'orders_productsOrders',
-      referencedTableName: 'order',
+      referencedTableName: 'orders',
       referencedColumnNames: ['id'],
       columnNames: ['order_id'],
       onDelete: 'SET NULL',
